@@ -13,6 +13,7 @@ import AppLoading from "expo-app-loading";
 import StartGameScreen from "./screens/StartGameScreen";
 import GameScreen from "./screens/GameScreen";
 import { LinearGradient } from "expo-linear-gradient";
+import { Statusbar } from "expo-status-bar";
 import Colors from "./constants/colors";
 import GameOverScreen from "./screens/GameOverScreen";
 
@@ -26,7 +27,7 @@ export default function App() {
     "open-sans-regular": require("./assets/fonts/OpenSans-Regular.ttf"),
   });
 
-  if(!fontLoaded) {
+  if (!fontLoaded) {
     return <AppLoading />;
   }
 
@@ -54,23 +55,32 @@ export default function App() {
   }
 
   if (isGameOver && userNumber) {
-    screen = <GameOverScreen roundsNumber={roundsNumber} userNumber={userNumber} onStartNewGame={startNewGameHandler}/>;
+    screen = (
+      <GameOverScreen
+        roundsNumber={roundsNumber}
+        userNumber={userNumber}
+        onStartNewGame={startNewGameHandler}
+      />
+    );
   }
 
   return (
-    <LinearGradient
-      colors={[Colors.primary700, Colors.accent300]}
-      style={styles.rootViewColor}
-    >
-      <ImageBackground
-        source={require("./assets/images/dices.jpg")}
-        resizeMode="cover"
+    <>
+      <StatusBar style="light" />
+      <LinearGradient
+        colors={[Colors.primary700, Colors.accent300]}
         style={styles.rootViewColor}
-        imageStyle={styles.ImageBackground}
       >
-        <SafeAreaView style={styles.rootViewColor}>{screen}</SafeAreaView>
-      </ImageBackground>
-    </LinearGradient>
+        <ImageBackground
+          source={require("./assets/images/dices.jpg")}
+          resizeMode="cover"
+          style={styles.rootViewColor}
+          imageStyle={styles.ImageBackground}
+        >
+          <SafeAreaView style={styles.rootViewColor}>{screen}</SafeAreaView>
+        </ImageBackground>
+      </LinearGradient>
+    </>
   );
 }
 

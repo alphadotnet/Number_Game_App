@@ -1,4 +1,11 @@
-import { Text, View, StyleSheet, Alert, FlatList } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Alert,
+  FlatList,
+  useWindowDimensions,
+} from "react-native";
 import Title from "../components/ui/Title";
 import { useState, useEffect } from "react";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -25,6 +32,7 @@ function GameScreen({ userNumber, onGameOver }) {
   const initialNumber = generateRandomBetween(1, 100, userNumber);
   const [currentGuess, setCurrentGuess] = useState(initialNumber);
   const [guessRounds, setGuessRounds] = useState([initialNumber]);
+  const { width, height } = useWindowDimensions();
 
   useEffect(() => {
     if (currentGuess === userNumber) {
@@ -65,10 +73,10 @@ function GameScreen({ userNumber, onGameOver }) {
   }
 
   const guessRoundsListLenght = guessRounds.length;
+  const marginTopDistance = height < 400 ? 0 : 100;
 
-  return (
-    <View style={styles.screen}>
-      <Title>Dự đoán của bạn</Title>
+  let content = (
+    <>
       <NumberConstainer>{currentGuess}</NumberConstainer>
       <Card>
         <IntroductionText style={styles.introductionText}>
@@ -87,6 +95,33 @@ function GameScreen({ userNumber, onGameOver }) {
           </View>
         </View>
       </Card>
+    </>
+  );
+
+  if (width > 500) {
+    content = (
+      <>
+        <View style={styles.buttonContainerWide}>
+          <View style={styles.viewButtonInput}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "lower")}>
+              <MaterialIcons name="remove" size={24} color="black" />
+            </PrimaryButton>
+          </View>
+          <NumberConstainer>{currentGuess}</NumberConstainer>
+          <View style={styles.viewButtonInput}>
+            <PrimaryButton onPress={nextGuessHandler.bind(this, "greater")}>
+              <MaterialIcons name="add" size={24} color="black" />
+            </PrimaryButton>
+          </View>
+        </View>
+      </>
+    );
+  }
+
+  return (
+    <View style={[styles.screen, { marginTop: marginTopDistance }]}>
+      <Title>Dự đoán của bạn</Title>
+      {content}
       <View style={styles.listContainer}>
         {/* // Dùng hiển thị Danh sách các con số đã xuất hiện */}
         {/* {guessRounds.map(guessRound => <Text key={guessRound}>{guessRound}</Text>)} */}
@@ -111,13 +146,17 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     padding: 12,
-    marginTop: 50,
+    alignItems: "center",
   },
   viewInput: {
     flexDirection: "row",
   },
   viewButtonInput: {
     flex: 1,
+  },
+  buttonContainerWide: {
+    flexDirection: 'row',
+    alignItems: "center",
   },
   textNote: {
     fontSize: 18,
@@ -128,8 +167,8 @@ const styles = StyleSheet.create({
   introductionText: {
     marginBottom: 10,
   },
-  listContainer:{
+  listContainer: {
     flex: 1,
     pading: 12,
-  }
+  },
 });

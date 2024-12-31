@@ -1,12 +1,22 @@
-import { TextInput, View, StyleSheet, Button, Alert, Text } from "react-native";
+import {
+  TextInput,
+  View,
+  StyleSheet,
+  Alert,
+  useWindowDimensions,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
 import { useState } from "react";
+
 import PrimaryButton from "../components/ui/PrimaryButton";
 import Title from "../components/ui/Title";
-import Colors from "../constants/colors";
 import Card from "../components/ui/Card";
 import IntroductionText from "../components/ui/IntroductionText";
+
 function StartGameScreen({ onPickNumber }) {
   const [enterNumber, setEnterNumber] = useState("");
+  const { width, height } = useWindowDimensions();
 
   function numberInputHandler(enterText) {
     setEnterNumber(enterText);
@@ -29,40 +39,49 @@ function StartGameScreen({ onPickNumber }) {
     setEnterNumber("");
   }
 
+  const marginTopDistance = height < 400 ? 30 : 100;
   return (
-    <View style={styles.rootContainer}>
-      <Title>TRÒ CHƠI ĐOÁN SỐ</Title>
-      <Card>
-        <IntroductionText>HÃY NHẬP SỐ CỦA BẠN</IntroductionText>
-        <TextInput
-          style={styles.numberInput}
-          maxLength={2}
-          keyboardType="number-pad"
-          autoCapitalize="none"
-          autoCorrect={false}
-          onChangeText={numberInputHandler}
-          value={enterNumber}
-        />
-        <View style={styles.viewInput}>
-          <View style={styles.viewButtonInput}>
-            <PrimaryButton onPress={resetInputHandler}>Đặt lại</PrimaryButton>
+    <ScrollView style={styles.screen}>
+    <KeyboardAvoidingView behavior="position" style={styles.screen}> 
+      <View style={[styles.rootContainer, { marginTop: marginTopDistance }]}>
+        <Title>TRÒ CHƠI ĐOÁN SỐ</Title>
+        <Card>
+          <IntroductionText>HÃY NHẬP SỐ CỦA BẠN</IntroductionText>
+          <TextInput
+            style={styles.numberInput}
+            maxLength={2}
+            keyboardType="number-pad"
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={numberInputHandler}
+            value={enterNumber}
+          />
+          <View style={styles.viewInput}>
+            <View style={styles.viewButtonInput}>
+              <PrimaryButton onPress={resetInputHandler}>Đặt lại</PrimaryButton>
+            </View>
+            <View style={styles.viewButtonInput}>
+              <PrimaryButton onPress={confirmInputHandler}>
+                Xác nhận
+              </PrimaryButton>
+            </View>
           </View>
-          <View style={styles.viewButtonInput}>
-            <PrimaryButton onPress={confirmInputHandler}>Xác nhận</PrimaryButton>
-          </View>
-        </View>
-      </Card>
-    </View>
+        </Card>
+      </View>
+    </KeyboardAvoidingView>
+    </ScrollView>
   );
 }
 
 export default StartGameScreen;
 
 const styles = StyleSheet.create({
-  rootContainer:{
+  screen: {
     flex: 1,
-    marginTop: 100,
-    alignItems: 'center',
+  },
+  rootContainer: {
+    flex: 1,
+    alignItems: "center",
   },
   numberInput: {
     height: 55,

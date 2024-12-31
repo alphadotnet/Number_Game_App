@@ -1,30 +1,65 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  useWindowDimensions,
+  ScrollView
+} from "react-native";
 import Title from "../components/ui/Title";
 import Colors from "../constants/colors";
 import PrimaryButton from "../components/ui/PrimaryButton";
 
-function GameOverScreen({roundsNumber, userNumber, onStartNewGame}) {
+function GameOverScreen({ roundsNumber, userNumber, onStartNewGame }) {
+  const { width, height } = useWindowDimensions();
+
+  let imageSize = 300;
+  if(width < 300){
+    imageSize = 150;
+  }
+
+  if(height <400){
+    imageSize = 80;
+  }
+
+  const imageStyle = {
+    width: imageSize,
+    height: imageSize,
+    borderRadius: imageSize / 2,
+  };
   return (
+    <ScrollView style={styles.screen}>
     <View style={styles.rootContainer}>
       <Title>TRÒ CHƠI KẾT THÚC!</Title>
-      <View style={styles.imageContainer}>
+      <View
+        style={[
+          styles.imageContainer,imageStyle,
+        ]}
+      >
         <Image
           style={styles.image}
           source={require("../assets/images/success.png")}
         ></Image>
       </View>
       <Text style={styles.summaryText}>
-        Điện thoại của bạn cần <Text style={styles.heightlightText}>{roundsNumber}</Text>{" "}
-        vòng để đoán số <Text style={styles.heightlightText}>{userNumber}</Text>.
+        Điện thoại của bạn cần{" "}
+        <Text style={styles.heightlightText}>{roundsNumber}</Text> vòng để đoán
+        số <Text style={styles.heightlightText}>{userNumber}</Text>.
       </Text>
-      <PrimaryButton onPress={onStartNewGame}>Bắt đầu trò chơi mới</PrimaryButton>
+      <PrimaryButton onPress={onStartNewGame}>
+        Bắt đầu trò chơi mới
+      </PrimaryButton>
     </View>
+    </ScrollView>
   );
 }
 
 export default GameOverScreen;
 
 const styles = StyleSheet.create({
+  screen:{
+    flex: 1,
+  },
   rootContainer: {
     flex: 1,
     justifyContent: "center",
@@ -32,9 +67,6 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   imageContainer: {
-    width: 300,
-    height: 300,
-    borderRadius: 150,
     overflow: "hidden",
     marginTop: 30,
     borderWidth: 3,
